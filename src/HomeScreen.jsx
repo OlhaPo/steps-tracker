@@ -1,37 +1,32 @@
 import React from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
-import HistoryIcon from "@mui/icons-material/History";
+import HistoryLink from "./HistoryLink";
 
 const HomeScreen = () => {
   return (
     <Box>
-      <Box>
-        <HistoryIcon
-          sx={{ position: "absolute", top: "50px", right: "50px" }}
-        />
-      </Box>
-      <Box>
-        <Typography variant="h5" gutterBottom>
-          Today I walked ...
-        </Typography>
-        <TextField
-          id="standard-basic"
-          variant="standard"
-          placeholder="Type here ... "
-          InputProps={{
-            sx: {
-              "&:before": {
-                borderBottom: "none",
-              },
-              "&:after": {
-                borderBottom: "none",
-              },
+      <HistoryLink />
+
+      <Typography variant="h5" gutterBottom>
+        Today I walked ...
+      </Typography>
+      <TextField
+        id="standard-basic"
+        variant="standard"
+        placeholder="Type here ... "
+        InputProps={{
+          sx: {
+            "&:before": {
+              borderBottom: "none",
             },
-          }}
-          mt={2}
-        />
-      </Box>
+            "&:after": {
+              borderBottom: "none",
+            },
+          },
+        }}
+        mt={2}
+      />
       <Box
         mt={8}
         sx={{

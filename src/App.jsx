@@ -1,7 +1,9 @@
 import React from "react";
 import "./App.css";
-import HomeScreen from "./HomeScreen";
 import { Container } from "@mui/material";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomeScreen from "./HomeScreen";
+import OverviewRecord from "./OverviewRecord";
 
 function App() {
   return (
@@ -14,7 +16,12 @@ function App() {
         height: "100vh",
       }}
     >
-      <HomeScreen />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="record" element={<OverviewRecord />} />
+        </Routes>
+      </BrowserRouter>
     </Container>
   );
 }
