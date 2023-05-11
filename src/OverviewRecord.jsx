@@ -22,13 +22,17 @@ const OverviewRecord = () => {
     height: "128px",
     width: "128px",
     borderRadius: "50%",
-    border: "thick double green",
+    border: "thick double",
     margin: "50px auto",
   };
 
+  // if () {
+  //   cardStyle.borderColor = 'green';
+  // }
+
   const typographyStyle = {
     textAlign: "center",
-    fontSize: "20px",
+    fontSize: "1.5rem",
   };
   return (
     <Box sx={{ width: "inherit" }}>

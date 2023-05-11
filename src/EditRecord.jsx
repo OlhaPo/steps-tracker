@@ -8,31 +8,82 @@ import dayjs from "dayjs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
+import { styled } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const themeCalender = createTheme({
+  palette: { primary: { main: "#001B5E" } },
+});
 
 const EditRecord = () => {
+  const CssTextField = styled(TextField)({
+    "& label.Mui-focused": {
+      color: "#001B5E",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#001B5E",
+      },
+      "&:hover fieldset": {
+        borderColor: "#001B5E",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#001B5E",
+      },
+    },
+  });
+
+  const buttonStyle = {
+    color: "#001B5E",
+    fontSize: "28px",
+  };
+
+  const datepickerStyle = {
+    "& label.Mui-focused": {
+      color: "#001B5E",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#001B5E",
+      },
+      "&:hover fieldset": {
+        borderColor: "#001B5E",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#001B5E",
+      },
+      "& .MuiIconButton-root": {
+        color: "#001B5E",
+      },
+    },
+  };
+
   return (
     <Box sx={{ width: "inherit" }}>
-      <Box
-        component="form"
-
-        // noValidate
-        // autoComplete="off"
-      >
+      <Box component="form">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={["DatePicker"]}>
-            <DatePicker label="Date" defaultValue={dayjs("2022-04-17")} />
-          </DemoContainer>
+          <ThemeProvider theme={themeCalender}>
+            <DemoContainer components={["DatePicker"]} sx={datepickerStyle}>
+              <DatePicker
+                label="Date"
+                defaultValue={dayjs("2022-04-17")}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </DemoContainer>
+          </ThemeProvider>
         </LocalizationProvider>
 
-        <TextField
+        <CssTextField
           required
           id="outlined-required"
           label="Steps"
           fullWidth
           margin="normal"
         />
-        <Typography>1 Step = 0.0056 km</Typography>
-        <TextField label="Route" fullWidth margin="normal" />
+        <Typography sx={{ color: "#001B5E", fontStyle: "italic" }}>
+          1 Step = 0.0056 km
+        </Typography>
+        <CssTextField required label="Route" fullWidth margin="normal" />
       </Box>
       <Box mt={6}>
         <Grid
@@ -41,19 +92,15 @@ const EditRecord = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Button>
+          <Button sx={buttonStyle}>
             <DeleteForeverIcon />
           </Button>
 
           <Grid>
-            <Button>
+            <Button sx={buttonStyle}>
               <ClearIcon />
             </Button>
-            <Button
-              sx={{
-                ml: "20px",
-              }}
-            >
+            <Button sx={{ ...buttonStyle, ml: "20px" }}>
               <DoneIcon />
             </Button>
           </Grid>
