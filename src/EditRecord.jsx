@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, TextField, Typography, Grid, Button } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -8,7 +8,8 @@ import dayjs from "dayjs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
-import { styled } from "@mui/material/styles";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "./firebase";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const themeCalender = createTheme({
@@ -16,7 +17,24 @@ const themeCalender = createTheme({
 });
 
 const EditRecord = () => {
-  const CssTextField = styled(TextField)({
+  const [steps, setSteps] = useState("");
+  const [route, setRoute] = useState("");
+
+  const addRecord = async (e) => {
+    if (steps === "" || route === "") {
+      alert("Enter valid data");
+      return;
+    }
+    await addDoc(collection(db, "dailyRecord"), {
+      stepsCount: steps,
+      // distance: distance,
+      route: route,
+    });
+    setSteps("");
+    setRoute("");
+  };
+
+  const textFieldStyle = {
     "& label.Mui-focused": {
       color: "#001B5E",
     },
@@ -31,7 +49,7 @@ const EditRecord = () => {
         borderColor: "#001B5E",
       },
     },
-  });
+  };
 
   const buttonStyle = {
     color: "#001B5E",
@@ -73,17 +91,30 @@ const EditRecord = () => {
           </ThemeProvider>
         </LocalizationProvider>
 
-        <CssTextField
+        <TextField
+          sx={textFieldStyle}
           required
-          id="outlined-required"
+          id="custom-css-outlined-input"
           label="Steps"
           fullWidth
           margin="normal"
+          value={steps}
+          onChange={(e) => setSteps(e.target.value)}
         />
         <Typography sx={{ color: "#001B5E", fontStyle: "italic" }}>
-          1 Step = 0.0056 km
+          1 Step = 0.000762 km
+          <br />
+          Distance: {(steps * 0.000762).toFixed(2)} km
         </Typography>
-        <CssTextField required label="Route" fullWidth margin="normal" />
+        <TextField
+          sx={textFieldStyle}
+          required
+          label="Route"
+          fullWidth
+          margin="normal"
+          value={route}
+          onChange={(e) => setRoute(e.target.value)}
+        />
       </Box>
       <Box mt={6}>
         <Grid
@@ -100,7 +131,7 @@ const EditRecord = () => {
             <Button sx={buttonStyle}>
               <ClearIcon />
             </Button>
-            <Button sx={{ ...buttonStyle, ml: "20px" }}>
+            <Button sx={{ ...buttonStyle, ml: "20px" }} onClick={addRecord}>
               <DoneIcon />
             </Button>
           </Grid>
