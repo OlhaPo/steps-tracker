@@ -14,7 +14,11 @@ const HomeScreen = () => {
       <Typography
         component={Link}
         to={"/edit"}
-        sx={{ color: "#7A7A7B", fontSize: "18px", textDecoration: "none" }}
+        sx={{
+          color: "#7A7A7B",
+          fontSize: "18px",
+          textDecoration: "none",
+        }}
       >
         Type here ...
       </Typography>
@@ -26,7 +30,6 @@ const HomeScreen = () => {
           justifyContent: "space-around",
           alignItems: "stretch",
           flexDirection: "row",
-          color: "#001B5E",
         }}
       >
         <DirectionsWalkIcon sx={{ fontSize: "24px" }} />

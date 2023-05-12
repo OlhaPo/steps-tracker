@@ -8,17 +8,19 @@ import dayjs from "dayjs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Link } from "react-router-dom";
 
-const themeCalender = createTheme({
-  palette: { primary: { main: "#001B5E" } },
-});
+const STEPS_TO_KM = 1312.33595801;
 
 const EditRecord = () => {
   const [steps, setSteps] = useState("");
   const [route, setRoute] = useState("");
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
+  const distance = (steps / STEPS_TO_KM).toFixed(2);
 
   const addRecord = async (e) => {
     if (steps === "" || route === "") {
@@ -26,13 +28,23 @@ const EditRecord = () => {
       return;
     }
     await addDoc(collection(db, "dailyRecord"), {
+      timestamp: selectedDate.toDate(),
       stepsCount: steps,
-      // distance: distance,
+      distanceCount: distance,
       route: route,
     });
     setSteps("");
     setRoute("");
+    setSelectedDate(null);
   };
+
+  // const deleteRecord = (id) => {
+  //   deleteDoc(doc(db, "dailyRecord", id));
+  // };
+
+  const themeCalender = createTheme({
+    palette: { primary: { main: "#001B5E" } },
+  });
 
   const textFieldStyle = {
     "& label.Mui-focused": {
@@ -83,8 +95,9 @@ const EditRecord = () => {
           <ThemeProvider theme={themeCalender}>
             <DemoContainer components={["DatePicker"]} sx={datepickerStyle}>
               <DatePicker
+                value={selectedDate}
                 label="Date"
-                defaultValue={dayjs("2022-04-17")}
+                onChange={(date) => setSelectedDate(date)}
                 slotProps={{ textField: { fullWidth: true } }}
               />
             </DemoContainer>
@@ -104,7 +117,7 @@ const EditRecord = () => {
         <Typography sx={{ color: "#001B5E", fontStyle: "italic" }}>
           1 Step = 0.000762 km
           <br />
-          Distance: {(steps * 0.000762).toFixed(2)} km
+          {steps > 0 ? `Distance: ${distance} km` : null}
         </Typography>
         <TextField
           sx={textFieldStyle}
@@ -123,12 +136,12 @@ const EditRecord = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Button sx={buttonStyle}>
+          {/* <Button sx={buttonStyle} onClick={deleteRecord}>
             <DeleteForeverIcon />
-          </Button>
+          </Button> */}
 
           <Grid>
-            <Button sx={buttonStyle}>
+            <Button sx={buttonStyle} component={Link} to={"/"}>
               <ClearIcon />
             </Button>
             <Button sx={{ ...buttonStyle, ml: "20px" }} onClick={addRecord}>
