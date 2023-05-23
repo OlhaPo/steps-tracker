@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Box, TextField, Typography, Grid, Button } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -8,39 +9,86 @@ import dayjs from "dayjs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ClearIcon from "@mui/icons-material/Clear";
 import DoneIcon from "@mui/icons-material/Done";
-import { addDoc, collection, deleteDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "./firebase";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import { getRecordById } from "./firebaseService";
 
 const STEPS_TO_KM = 1312.33595801;
 
+export const buttonStyle = {
+  color: "#001B5E",
+  fontSize: "28px",
+};
+
 const EditRecord = () => {
-  const [steps, setSteps] = useState("");
+  const { id } = useParams();
+  const isCreateMode = !id;
+  const navigate = useNavigate();
+  const [steps, setSteps] = useState(0);
   const [route, setRoute] = useState("");
+
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
-  const distance = (steps / STEPS_TO_KM).toFixed(2);
+  const distance = convertStepsToKm(steps);
 
-  const addRecord = async (e) => {
-    if (steps === "" || route === "") {
+  const ok = async (e) => {
+    if (steps <= 0 || route === "") {
       alert("Enter valid data");
       return;
     }
-    await addDoc(collection(db, "dailyRecord"), {
-      timestamp: selectedDate.toDate(),
-      stepsCount: steps,
-      distanceCount: distance,
-      route: route,
-    });
-    setSteps("");
-    setRoute("");
-    setSelectedDate(null);
+
+    let targetId;
+    if (isCreateMode) {
+      const newDoc = await addDoc(collection(db, "dailyRecord"), {
+        timestamp: selectedDate.toDate(),
+        stepsCount: +steps,
+        distanceCount: distance,
+        route: route,
+      });
+      // setSteps(0);
+      // setRoute("");
+      // setSelectedDate(null);
+      targetId = newDoc.id;
+    } else {
+      await updateDoc(doc(db, "dailyRecord", id));
+      targetId = id;
+    }
+    navigate("/record/" + targetId);
   };
 
-  // const deleteRecord = (id) => {
-  //   deleteDoc(doc(db, "dailyRecord", id));
-  // };
+  useEffect(() => {
+    if (isCreateMode) return;
+
+    getRecordById(id)
+      .then((record) => {
+        setSelectedDate(dayjs.unix(record.timestamp.seconds));
+        setSteps(record.stepsCount);
+        setRoute(record.route);
+      })
+      .catch();
+  }, [id, isCreateMode]);
+
+  const deleteRecord = async (id) => {
+    try {
+      const documentRef = doc(db, "dailyRecord", id);
+      await deleteDoc(documentRef);
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
+    // setSteps("");
+    // setRoute("");
+    // setSelectedDate(null);
+    navigate("/history");
+  };
 
   const themeCalender = createTheme({
     palette: { primary: { main: "#001B5E" } },
@@ -61,11 +109,6 @@ const EditRecord = () => {
         borderColor: "#001B5E",
       },
     },
-  };
-
-  const buttonStyle = {
-    color: "#001B5E",
-    fontSize: "28px",
   };
 
   const datepickerStyle = {
@@ -110,15 +153,27 @@ const EditRecord = () => {
           id="custom-css-outlined-input"
           label="Steps"
           fullWidth
+          type="number"
           margin="normal"
           value={steps}
-          onChange={(e) => setSteps(e.target.value)}
+          onChange={(e) => setSteps(+e.target.value)}
         />
-        <Typography sx={{ color: "#001B5E", fontStyle: "italic" }}>
-          1 Step = 0.000762 km
-          <br />
-          {steps > 0 ? `Distance: ${distance} km` : null}
-        </Typography>
+        <Box
+          sx={{
+            color: "#001B5E",
+            fontStyle: "italic",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography>
+            {steps > 0 ? `Distance: ${distance.toFixed(2)} km` : null}
+          </Typography>
+          <Typography sx={{ color: "#7A7A7B" }}>
+            1 Step = 0.000762 km
+          </Typography>
+        </Box>
+
         <TextField
           sx={textFieldStyle}
           required
@@ -136,15 +191,15 @@ const EditRecord = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          {/* <Button sx={buttonStyle} onClick={deleteRecord}>
+          <Button sx={buttonStyle} onClick={() => deleteRecord(id)}>
             <DeleteForeverIcon />
-          </Button> */}
+          </Button>
 
           <Grid>
             <Button sx={buttonStyle} component={Link} to={"/"}>
               <ClearIcon />
             </Button>
-            <Button sx={{ ...buttonStyle, ml: "20px" }} onClick={addRecord}>
+            <Button sx={{ ...buttonStyle, ml: "20px" }} onClick={ok}>
               <DoneIcon />
             </Button>
           </Grid>
@@ -155,3 +210,7 @@ const EditRecord = () => {
 };
 
 export default EditRecord;
+
+function convertStepsToKm(steps) {
+  return steps / STEPS_TO_KM;
+}

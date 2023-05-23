@@ -2,6 +2,7 @@ import React from "react";
 import HistoryIcon from "@mui/icons-material/History";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { buttonStyle } from "./EditRecord";
 
 const HistoryLink = () => {
   return (
@@ -11,11 +12,13 @@ const HistoryLink = () => {
       sx={{
         position: "absolute",
         top: "50px",
-        right: "50px",
-        color: "#001B5E",
+        right: "80px",
+        "@media (max-width:576px)": {
+          right: "20px",
+        },
       }}
     >
-      <HistoryIcon />
+      <HistoryIcon sx={buttonStyle} />
     </Button>
   );
 };

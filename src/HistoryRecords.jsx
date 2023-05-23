@@ -7,7 +7,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import React from "react";
 import Radio from "@mui/material/Radio";
@@ -17,41 +16,24 @@ import FormControl from "@mui/material/FormControl";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
-import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { getHistory } from "./store/historySlice";
 
 const HistoryRecords = () => {
+  const months = useSelector(getHistory);
   const [value, setValue] = React.useState("year");
 
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
-  function createData(month, steps, km) {
-    return {
-      month,
-      steps,
-      km,
-      history: [
-        {
-          date: "2020-01-05",
-          steps: 1500,
-          km: 2.5,
-        },
-        {
-          date: "2020-01-06",
-          steps: 1500,
-          km: 2.5,
-        },
-      ],
-    };
-  }
-
   function Row(props) {
-    const { row } = props;
+    const monthRecord = props.row;
     const [open, setOpen] = React.useState(false);
 
     return (
       <React.Fragment>
+        {/* 2nd level table */}
         <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
           <TableCell>
             <IconButton
@@ -62,35 +44,34 @@ const HistoryRecords = () => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">
-            {row.month}
+          <TableCell>{monthRecord.month}</TableCell>
+          <TableCell align="right">{monthRecord.stepsTotal}</TableCell>
+          <TableCell align="right">
+            {monthRecord.distanceTotal.toFixed(2)}
           </TableCell>
-          <TableCell align="right">{row.steps}</TableCell>
-          <TableCell align="right">{row.km}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  History
-                </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
+                      <TableCell />
                       <TableCell>Date</TableCell>
                       <TableCell align="right">Steps</TableCell>
                       <TableCell align="right">Km</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.history.map((historyRow) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component="th" scope="row">
-                          {historyRow.date}
+                    {monthRecord.dayRecords.map((record) => (
+                      <TableRow key={record.id}>
+                        <TableCell />
+                        <TableCell>{record.date.format("L")}</TableCell>
+                        <TableCell align="right">{record.stepsCount}</TableCell>
+                        <TableCell align="right">
+                          {record.distanceCount.toFixed(2)}
                         </TableCell>
-                        <TableCell align="right">{historyRow.steps}</TableCell>
-                        <TableCell align="right">{historyRow.km}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -103,34 +84,19 @@ const HistoryRecords = () => {
     );
   }
 
-  Row.propTypes = {
-    row: PropTypes.shape({
-      month: PropTypes.string.isRequired,
-      steps: PropTypes.number.isRequired,
-      km: PropTypes.number.isRequired,
-      history: PropTypes.arrayOf(
-        PropTypes.shape({
-          steps: PropTypes.number.isRequired,
-          km: PropTypes.number.isRequired,
-          date: PropTypes.string.isRequired,
-        })
-      ).isRequired,
-    }).isRequired,
-  };
-
-  const rows = [createData("April", 3000, 5)];
   return (
     <Box>
       <Box sx={{ position: "absolute", top: "50px", right: "5px" }}>
         <FormControl>
           <RadioGroup row value={value} onChange={handleChange}>
-            <FormControlLabel value="Year" control={<Radio />} label="Year" />
-            <FormControlLabel value="Month" control={<Radio />} label="Month" />
+            <FormControlLabel value="year" control={<Radio />} label="Year" />
+            <FormControlLabel value="month" control={<Radio />} label="Month" />
           </RadioGroup>
         </FormControl>
       </Box>
       <Box>
         <TableContainer>
+          {/* 1st level table */}
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
@@ -141,8 +107,8 @@ const HistoryRecords = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <Row key={row.month} row={row} />
+              {months.map((monthRecord) => (
+                <Row key={monthRecord.monthId} row={monthRecord} />
               ))}
             </TableBody>
           </Table>

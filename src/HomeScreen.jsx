@@ -3,8 +3,12 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import HistoryLink from "./HistoryLink";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getCurrentMonthStats } from "./store/historySlice";
 
 const HomeScreen = () => {
+  const currentMonth = useSelector(getCurrentMonthStats);
+  console.log(currentMonth);
   return (
     <Box>
       <HistoryLink />
@@ -13,7 +17,7 @@ const HomeScreen = () => {
       </Typography>
       <Typography
         component={Link}
-        to={"/edit"}
+        to={"/create"}
         sx={{
           color: "#7A7A7B",
           fontSize: "18px",
@@ -23,20 +27,24 @@ const HomeScreen = () => {
         Type here ...
       </Typography>
 
-      <Box
-        mt={6}
-        sx={{
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "stretch",
-          flexDirection: "row",
-        }}
-      >
-        <DirectionsWalkIcon sx={{ fontSize: "24px" }} />
-        <Typography variant="subtitle1" sx={{ fontSize: "18px" }}>
-          23785 steps in May
-        </Typography>
-      </Box>
+      {currentMonth ? (
+        <Box
+          mt={6}
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "stretch",
+            flexDirection: "row",
+          }}
+        >
+          <DirectionsWalkIcon sx={{ fontSize: "24px" }} />
+          <Typography variant="subtitle1" sx={{ fontSize: "18px" }}>
+            {currentMonth?.stepsTotal} steps in {currentMonth?.month}
+          </Typography>
+        </Box>
+      ) : (
+        ""
+      )}
     </Box>
   );
 };
