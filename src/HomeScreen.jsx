@@ -10,7 +10,14 @@ const HomeScreen = () => {
   const currentMonth = useSelector(getCurrentMonthStats);
   console.log(currentMonth);
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flexWrap: "wrap",
+        alignContent: "center",
+      }}
+    >
       <HistoryLink />
       <Typography variant="h5" gutterBottom>
         Today I walked ...

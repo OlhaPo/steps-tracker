@@ -7,25 +7,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Button,
 } from "@mui/material";
 import React from "react";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import { useSelector } from "react-redux";
 import { getHistory } from "./store/historySlice";
+import { Link } from "react-router-dom";
+import { buttonStyle } from "./EditRecord";
 
 const HistoryRecords = () => {
   const months = useSelector(getHistory);
-  const [value, setValue] = React.useState("year");
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
 
   function Row(props) {
     const monthRecord = props.row;
@@ -34,12 +29,13 @@ const HistoryRecords = () => {
     return (
       <React.Fragment>
         {/* 2nd level table */}
-        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableRow>
           <TableCell>
             <IconButton
               aria-label="expand row"
               size="small"
               onClick={() => setOpen(!open)}
+              sx={buttonStyle}
             >
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
@@ -54,13 +50,14 @@ const HistoryRecords = () => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Table size="small" aria-label="purchases">
+                <Table size="small">
                   <TableHead>
                     <TableRow>
                       <TableCell />
                       <TableCell>Date</TableCell>
                       <TableCell align="right">Steps</TableCell>
                       <TableCell align="right">Km</TableCell>
+                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -71,6 +68,13 @@ const HistoryRecords = () => {
                         <TableCell align="right">{record.stepsCount}</TableCell>
                         <TableCell align="right">
                           {record.distanceCount.toFixed(2)}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Button component={Link} to={"/record/" + record.id}>
+                            <EditIcon
+                              sx={{ ...buttonStyle, fontSize: "20px" }}
+                            />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -85,36 +89,24 @@ const HistoryRecords = () => {
   }
 
   return (
-    <Box>
-      <Box sx={{ position: "absolute", top: "50px", right: "5px" }}>
-        <FormControl>
-          <RadioGroup row value={value} onChange={handleChange}>
-            <FormControlLabel value="year" control={<Radio />} label="Year" />
-            <FormControlLabel value="month" control={<Radio />} label="Month" />
-          </RadioGroup>
-        </FormControl>
-      </Box>
-      <Box>
-        <TableContainer>
-          {/* 1st level table */}
-          <Table aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>Month</TableCell>
-                <TableCell align="right">Steps</TableCell>
-                <TableCell align="right">Kilometers</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {months.map((monthRecord) => (
-                <Row key={monthRecord.monthId} row={monthRecord} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    </Box>
+    <TableContainer>
+      {/* 1st level table */}
+      <Table aria-label="collapsible table" size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Month</TableCell>
+            <TableCell align="right">Steps</TableCell>
+            <TableCell align="right">Kilometers</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {months.map((monthRecord) => (
+            <Row key={monthRecord.monthId} row={monthRecord} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

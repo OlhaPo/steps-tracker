@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  height: 100vh;
+  margin-top: 200px;
+}
+
+#root {
+  height: 100%;
+}

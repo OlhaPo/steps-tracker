@@ -19,27 +19,9 @@ import dayjs from "dayjs";
 
 const OverviewRecord = () => {
   let { id } = useParams();
-  // const documentId = "Ey8X0x7n9Ld4iAynDxtW"; // the ID of the document you want to retrieve
-  // const documentRef = doc(db, "dailyRecord", documentId); // get a reference to the document
+
   const [date, setDate] = useState();
   const [stepCount, setStepCount] = useState();
-
-  // useEffect(() => {
-  //   getDoc(documentRef)
-  //     .then((docSnap) => {
-  //       if (docSnap.exists()) {
-  //         const data = docSnap.data(); // get the data object
-  //         const { stepsCount, timestamp } = data;
-  //         setDate(dayjs.unix(timestamp.seconds));
-  //         setStepCount(stepsCount);
-  //       } else {
-  //         console.log("No such document!");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error getting document:", error);
-  //     });
-  // }, []);
 
   useEffect(() => {
     const retrieveDataById = async () => {

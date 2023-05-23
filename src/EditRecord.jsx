@@ -25,7 +25,7 @@ const STEPS_TO_KM = 1312.33595801;
 
 export const buttonStyle = {
   color: "#001B5E",
-  fontSize: "28px",
+  fontSize: "25px",
 };
 
 const EditRecord = () => {
@@ -53,9 +53,7 @@ const EditRecord = () => {
         distanceCount: distance,
         route: route,
       });
-      // setSteps(0);
-      // setRoute("");
-      // setSelectedDate(null);
+
       targetId = newDoc.id;
     } else {
       await updateDoc(doc(db, "dailyRecord", id));
@@ -84,9 +82,7 @@ const EditRecord = () => {
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
-    // setSteps("");
-    // setRoute("");
-    // setSelectedDate(null);
+
     navigate("/history");
   };
 

@@ -12,15 +12,7 @@ import HistoryRecords from "./HistoryRecords";
 function App() {
   return (
     // <Provider store={store}>
-    <Container
-      maxWidth="sm"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
+    <Container maxWidth="sm" sx={{ height: "100%" }}>
       <Router>
         <Routes>
           <Route path="/" element={<HomeScreen />} />
