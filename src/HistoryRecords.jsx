@@ -122,7 +122,7 @@ const HistoryRecords = () => {
       sx={{
         width: "500px",
         "@media (max-width:576px)": {
-          width: "300px",
+          width: "325px",
         },
       }}
     >
