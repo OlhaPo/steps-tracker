@@ -24,7 +24,7 @@ const HomeScreen = () => {
       }}
     >
       <Typography variant="h5" gutterBottom>
-        Today I walked ...
+        Today I walked
       </Typography>
       <Typography
         component={Link}
@@ -35,7 +35,7 @@ const HomeScreen = () => {
           textDecoration: "none",
         }}
       >
-        Click here ...
+        Click here...
       </Typography>
 
       {currentMonth ? (
