@@ -1,4 +1,11 @@
-import { getDoc, doc, collection, getDocs } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 export const getRecordById = async (recordId) => {
@@ -21,13 +28,15 @@ export const getRecordById = async (recordId) => {
 
 export const fetchCollectionData = async () => {
   const collectionRef = collection(db, "dailyRecord");
+  const q = query(collectionRef, orderBy("timestamp", "desc"));
 
   try {
-    const querySnapshot = await getDocs(collectionRef);
+    const querySnapshot = await getDocs(q);
     const fetchedData = querySnapshot.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
+
     return fetchedData;
     // setRecords(fetchedData);
   } catch (error) {

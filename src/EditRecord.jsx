@@ -20,6 +20,8 @@ import { db } from "./firebase";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { getRecordById } from "./firebaseService";
+import { useSelector } from "react-redux";
+import { getHistory, createMonthId } from "./store/historySlice";
 
 const STEPS_TO_KM = 1312.33595801;
 
@@ -32,7 +34,8 @@ const EditRecord = () => {
   const { id } = useParams();
   const isCreateMode = !id;
   const navigate = useNavigate();
-  const [steps, setSteps] = useState(0);
+  const months = useSelector(getHistory);
+  const [steps, setSteps] = useState("");
   const [route, setRoute] = useState("");
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -40,23 +43,25 @@ const EditRecord = () => {
   const distance = convertStepsToKm(steps);
 
   const ok = async (e) => {
-    if (steps <= 0 || route === "") {
+    if (steps <= 0 || route === "" || checkExistingDate(selectedDate, months)) {
       alert("Enter valid data");
       return;
     }
 
     let targetId;
+    const payload = {
+      timestamp: selectedDate.toDate(),
+      stepsCount: +steps,
+      distanceCount: distance,
+      route: route,
+    };
+
     if (isCreateMode) {
-      const newDoc = await addDoc(collection(db, "dailyRecord"), {
-        timestamp: selectedDate.toDate(),
-        stepsCount: +steps,
-        distanceCount: distance,
-        route: route,
-      });
+      const newDoc = await addDoc(collection(db, "dailyRecord"), payload);
 
       targetId = newDoc.id;
     } else {
-      await updateDoc(doc(db, "dailyRecord", id));
+      await updateDoc(doc(db, "dailyRecord", id), payload);
       targetId = id;
     }
     navigate("/record/" + targetId);
@@ -128,7 +133,14 @@ const EditRecord = () => {
   };
 
   return (
-    <Box sx={{ width: "inherit" }}>
+    <Box
+      sx={{
+        width: "500px",
+        "@media (max-width:576px)": {
+          width: "300px",
+        },
+      }}
+    >
       <Box component="form">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <ThemeProvider theme={themeCalender}>
@@ -209,4 +221,13 @@ export default EditRecord;
 
 function convertStepsToKm(steps) {
   return steps / STEPS_TO_KM;
+}
+
+function checkExistingDate(date, monthHistory) {
+  const monthId = createMonthId(date);
+  return monthHistory.some(
+    (monthRecord) =>
+      monthRecord.monthId === monthId &&
+      monthRecord.dayRecords.some((day) => day.date.isSame(date, "day"))
+  );
 }

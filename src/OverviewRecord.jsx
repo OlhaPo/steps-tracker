@@ -57,7 +57,7 @@ const OverviewRecord = () => {
     borderRadius: "50%",
     border: "thick double",
     borderColor: "grey",
-    margin: "50px auto",
+    margin: "auto",
   };
 
   if (stepCount) {
@@ -66,7 +66,7 @@ const OverviewRecord = () => {
     } else if (stepCount < 4000) {
       cardStyle.borderColor = "#962b52";
     } else if (stepCount < 8000) {
-      cardStyle.borderColor = "#ed9f66";
+      cardStyle.borderColor = "#df503d";
     } else {
       cardStyle.borderColor = "#2a9330";
     }
@@ -75,13 +75,21 @@ const OverviewRecord = () => {
   const typographyStyle = {
     textAlign: "center",
     fontSize: "1.3rem",
+    color: "#001b5e",
   };
 
   return (
-    <Box sx={{ width: "inherit" }}>
-      <HistoryLink />
-      <Typography sx={typographyStyle}>{date?.format("LL")}</Typography>
-
+    <Box
+      sx={{
+        width: "500px",
+        "@media (max-width:576px)": {
+          width: "300px",
+        },
+      }}
+    >
+      <Typography mb={6} sx={typographyStyle}>
+        {date?.format("LL")}
+      </Typography>
       <Card sx={cardStyle}>
         <CardContent
           sx={{
@@ -95,10 +103,17 @@ const OverviewRecord = () => {
             alignItems: "center",
           }}
         >
-          <DirectionsWalkIcon sx={{ fontSize: "30px" }} />
+          <DirectionsWalkIcon sx={{ fontSize: "30px", color: "#001b5e" }} />
           {stepCount > 0 ? (
             <div>
-              <Typography mt={1} sx={{ fontSize: "18px", textAlign: "center" }}>
+              <Typography
+                mt={1}
+                sx={{
+                  fontSize: "18px",
+                  textAlign: "center",
+                  color: "#001b5e",
+                }}
+              >
                 {stepCount}
                 <br />
                 steps
@@ -127,6 +142,9 @@ const OverviewRecord = () => {
             </Button>
           </Grid>
         </Grid>
+      </Box>
+      <Box sx={{ paddingLeft: "20px" }}>
+        <HistoryLink />
       </Box>
     </Box>
   );

@@ -1,14 +1,19 @@
-import React from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Typography, Button } from "@mui/material";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
-import HistoryLink from "./HistoryLink";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getCurrentMonthStats } from "./store/historySlice";
+import { getCurrentMonthStats, fetchHistory } from "./store/historySlice";
+import { useSelector, useDispatch } from "react-redux";
+import { linkStyle } from "./HistoryLink";
 
 const HomeScreen = () => {
   const currentMonth = useSelector(getCurrentMonthStats);
-  console.log(currentMonth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchHistory());
+  }, [dispatch]);
+
   return (
     <Box
       sx={{
@@ -18,7 +23,6 @@ const HomeScreen = () => {
         alignContent: "center",
       }}
     >
-      <HistoryLink />
       <Typography variant="h5" gutterBottom>
         Today I walked ...
       </Typography>
@@ -31,7 +35,7 @@ const HomeScreen = () => {
           textDecoration: "none",
         }}
       >
-        Type here ...
+        Click here ...
       </Typography>
 
       {currentMonth ? (
@@ -52,6 +56,10 @@ const HomeScreen = () => {
       ) : (
         ""
       )}
+
+      <Button component={Link} to={"/history"} sx={linkStyle}>
+        History
+      </Button>
     </Box>
   );
 };

@@ -1,7 +1,4 @@
 import React from "react";
-import "./App.css";
-// import store from "./store/store";
-// import { Provider } from "react-redux";
 import { Container } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomeScreen from "./HomeScreen";
@@ -11,8 +8,7 @@ import HistoryRecords from "./HistoryRecords";
 
 function App() {
   return (
-    // <Provider store={store}>
-    <Container maxWidth="sm" sx={{ height: "100%" }}>
+    <Container maxWidth="sm">
       <Router>
         <Routes>
           <Route path="/" element={<HomeScreen />} />
@@ -23,7 +19,6 @@ function App() {
         </Routes>
       </Router>
     </Container>
-    // </Provider>
   );
 }
 

@@ -1,9 +1,24 @@
-body {
-  margin: 0;
-  height: 100vh;
-  margin-top: 200px;
+html {
+  height: 100%;
 }
 
-#root {
+body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  margin-top: 100px;
+  color: #001b5e;
+}
+
+@media (max-width: 576px) {
+  body {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-top: 0;
+  }
 }

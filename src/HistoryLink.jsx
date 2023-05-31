@@ -1,24 +1,21 @@
 import React from "react";
-import HistoryIcon from "@mui/icons-material/History";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { buttonStyle } from "./EditRecord";
+
+export const linkStyle = {
+  justifyContent: "flex-start",
+  textTransform: "none",
+  color: "#001b5e",
+  marginTop: "50px",
+  paddingLeft: 0,
+  fontWeight: 400,
+  fontSize: "16px",
+};
 
 const HistoryLink = () => {
   return (
-    <Button
-      component={Link}
-      to={"/history"}
-      sx={{
-        position: "absolute",
-        top: "50px",
-        right: "80px",
-        "@media (max-width:576px)": {
-          right: "20px",
-        },
-      }}
-    >
-      <HistoryIcon sx={buttonStyle} />
+    <Button component={Link} to={"/history"} sx={linkStyle}>
+      History
     </Button>
   );
 };

@@ -7,10 +7,10 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import store from "./store/store";
-import { fetchHistory } from "./store/historySlice.js";
+// import { fetchHistory } from "./store/historySlice.js";
 import { Provider } from "react-redux";
 
-store.dispatch(fetchHistory());
+// store.dispatch(fetchHistory());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

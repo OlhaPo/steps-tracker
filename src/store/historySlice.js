@@ -10,6 +10,7 @@ export const fetchHistory = createAsyncThunk(
     try {
       const response = await fetchCollectionData();
       const months = groupByMonth(response);
+
       dispatch(historySlice.actions.updateMonths(months));
     } catch (error) {
       console.log("Error fetching history:", error);
@@ -37,7 +38,7 @@ export const getHistory = (state) => {
 };
 
 export const getCurrentMonthStats = (state) => {
-  const monthId = dayjs().format(MONTH_ID_FORMAT);
+  const monthId = createMonthId(dayjs());
   return state.history.months.find((m) => m.monthId === monthId);
 };
 
@@ -45,6 +46,10 @@ export const getCurrentMonthStats = (state) => {
 export const { updateMonths } = historySlice.actions;
 
 export default historySlice.reducer;
+
+export function createMonthId(date) {
+  return date.format(MONTH_ID_FORMAT);
+}
 
 function groupByMonth(response) {
   const result = [];
@@ -54,7 +59,7 @@ function groupByMonth(response) {
     })
     .forEach((r) => {
       // 1. Get month and year formatted from timestamp
-      const monthId = r.date.format(MONTH_ID_FORMAT);
+      const monthId = createMonthId(r.date);
       const existingMonthIndex = result.findIndex((m) => m.monthId === monthId);
       if (existingMonthIndex > -1) {
         // add km and steps
