@@ -50,7 +50,8 @@ const HomeScreen = () => {
         >
           <DirectionsWalkIcon sx={{ fontSize: "24px" }} />
           <Typography variant="subtitle1" sx={{ fontSize: "18px" }}>
-            {currentMonth?.stepsTotal} steps in {currentMonth?.month}
+            {currentMonth?.stepsTotal.toLocaleString()} steps in{" "}
+            {currentMonth?.month}
           </Typography>
         </Box>
       ) : (

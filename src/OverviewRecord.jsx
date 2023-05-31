@@ -16,6 +16,7 @@ import { buttonStyle } from "./EditRecord";
 import { db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import dayjs from "dayjs";
+import { linkStyle } from "./HistoryLink";
 
 const OverviewRecord = () => {
   let { id } = useParams();
@@ -114,7 +115,7 @@ const OverviewRecord = () => {
                   color: "#001b5e",
                 }}
               >
-                {stepCount}
+                {stepCount.toLocaleString()}
                 <br />
                 steps
               </Typography>
@@ -132,7 +133,7 @@ const OverviewRecord = () => {
           alignItems="center"
         >
           <Grid>
-            <Button component={Link} to={"/"}>
+            <Button component={Link} to={"/history"}>
               <ArrowBackIcon sx={buttonStyle} />
             </Button>
           </Grid>
@@ -143,8 +144,8 @@ const OverviewRecord = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ paddingLeft: "20px" }}>
-        <HistoryLink />
+      <Box component={Link} to={"/"}>
+        <Button sx={{ ...linkStyle, paddingLeft: "20px" }}>Home</Button>
       </Box>
     </Box>
   );

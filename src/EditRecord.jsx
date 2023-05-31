@@ -172,13 +172,18 @@ const EditRecord = () => {
             fontStyle: "italic",
             display: "flex",
             justifyContent: "space-between",
+            "@media (max-width:576px)": {
+              flexDirection: "column",
+              fontSize: "14px",
+              marginBottom: "10px",
+            },
           }}
         >
+          <Typography sx={{ color: "#7A7A7B", marginBottom: "10px" }}>
+            1 Step = 0.000762 km
+          </Typography>
           <Typography>
             {steps > 0 ? `Distance: ${distance.toFixed(2)} km` : null}
-          </Typography>
-          <Typography sx={{ color: "#7A7A7B" }}>
-            1 Step = 0.000762 km
           </Typography>
         </Box>
 
@@ -199,7 +204,14 @@ const EditRecord = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Button sx={buttonStyle} onClick={() => deleteRecord(id)}>
+          <Button
+            sx={{
+              ...buttonStyle,
+              paddingLeft: 0,
+              justifyContent: "flex-start",
+            }}
+            onClick={() => deleteRecord(id)}
+          >
             <DeleteForeverIcon />
           </Button>
 
@@ -207,7 +219,13 @@ const EditRecord = () => {
             <Button sx={buttonStyle} component={Link} to={"/"}>
               <ClearIcon />
             </Button>
-            <Button sx={{ ...buttonStyle, ml: "20px" }} onClick={ok}>
+            <Button
+              sx={{
+                ...buttonStyle,
+                justifyContent: "flex-end",
+              }}
+              onClick={ok}
+            >
               <DoneIcon />
             </Button>
           </Grid>

@@ -32,6 +32,10 @@ const HistoryRecords = () => {
     dispatch(fetchHistory());
   }, [dispatch]);
 
+  const tableHeader = {
+    fontSize: "16px",
+  };
+
   function Row(props) {
     const monthRecord = props.row;
     const [open, setOpen] = React.useState(false);
@@ -50,9 +54,11 @@ const HistoryRecords = () => {
             </IconButton>
           </TableCell>
           <TableCell align="left">{monthRecord.month}</TableCell>
-          <TableCell align="left">{monthRecord.stepsTotal}</TableCell>
           <TableCell align="left">
-            {monthRecord.distanceTotal.toFixed(2)}
+            {monthRecord.stepsTotal.toLocaleString()}
+          </TableCell>
+          <TableCell align="left">
+            {monthRecord.distanceTotal.toFixed(2).toLocaleString()}
           </TableCell>
         </TableRow>
         <TableRow>
@@ -82,9 +88,11 @@ const HistoryRecords = () => {
                           </IconButton>
                         </TableCell>
                         <TableCell>{record.date.format("ddd DD")}</TableCell>
-                        <TableCell align="right">{record.stepsCount}</TableCell>
                         <TableCell align="right">
-                          {record.distanceCount.toFixed(2)}
+                          {record.stepsCount.toLocaleString()}
+                        </TableCell>
+                        <TableCell align="right">
+                          {record.distanceCount.toFixed(2).toLocaleString()}
                         </TableCell>
                         {/* <TableCell align="right"></TableCell> */}
                       </TableRow>
@@ -132,9 +140,9 @@ const HistoryRecords = () => {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Month</TableCell>
-              <TableCell>Steps</TableCell>
-              <TableCell align="left">Km</TableCell>
+              <TableCell sx={tableHeader}>Month</TableCell>
+              <TableCell sx={tableHeader}>Steps</TableCell>
+              <TableCell sx={tableHeader}>Km</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
